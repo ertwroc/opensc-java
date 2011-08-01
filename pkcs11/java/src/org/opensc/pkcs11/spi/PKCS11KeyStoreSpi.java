@@ -463,6 +463,8 @@ public class PKCS11KeyStoreSpi extends KeyStoreSpi
 	
 	/* (non-Javadoc)
 	 * @see java.security.KeyStoreSpi#engineLoad(java.io.InputStream, char[])
+	 * 
+	 * If pin is null then keystore will contain only public objects
 	 */
 	@Override
 	public void engineLoad(InputStream file, char[] pin) throws IOException,
@@ -472,9 +474,9 @@ public class PKCS11KeyStoreSpi extends KeyStoreSpi
 			throw new IOException ("PKCS11 Key Store requires a null InputStream a the first argument.");
 	
 		PKCS11LoadStoreParameter param = new PKCS11LoadStoreParameter();
-		
-		param.setProtectionParameter(new PasswordProtection(pin));
-		
+		if (pin != null) {
+			param.setProtectionParameter(new PasswordProtection(pin));
+		}
 		engineLoad(param);
 	}
 
